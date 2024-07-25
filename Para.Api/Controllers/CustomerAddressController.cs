@@ -13,18 +13,18 @@ namespace Para.Api.Controllers
     [ApiController]
     public class CustomerAddressController : ControllerBase
     {
-        private readonly IMediator _mediator;
+        private readonly IMediator mediator;
 
         public CustomerAddressController(IMediator mediator)
         {
-            _mediator = mediator;
+            this.mediator = mediator;
         }
 
         [HttpGet]
         public async Task<ApiResponse<List<CustomerAddressResponse>>> Get()
         {
             var operation = new GetAllCustomerAddressesQuery();
-            var result = await _mediator.Send(operation);
+            var result = await mediator.Send(operation);
             return result;
         }
 
@@ -32,7 +32,7 @@ namespace Para.Api.Controllers
         public async Task<ApiResponse<CustomerAddressResponse>> Get([FromRoute] long addressId)
         {
             var operation = new GetCustomerAddressByIdQuery(addressId);
-            var result = await _mediator.Send(operation);
+            var result = await mediator.Send(operation);
             return result;
         }
 
@@ -40,7 +40,7 @@ namespace Para.Api.Controllers
         public async Task<ApiResponse<List<CustomerAddressResponse>>> GetByParameters([FromQuery] long customerId, [FromQuery] string country, [FromQuery] string city)
         {
             var operation = new GetCustomerAddressByParametersQuery(customerId, country, city);
-            var result = await _mediator.Send(operation);
+            var result = await mediator.Send(operation);
             return result;
         }
 
@@ -48,7 +48,7 @@ namespace Para.Api.Controllers
         public async Task<ApiResponse<CustomerAddressResponse>> Post([FromBody] CustomerAddressRequest value)
         {
             var operation = new CreateCustomerAddressCommand(value);
-            var result = await _mediator.Send(operation);
+            var result = await mediator.Send(operation);
             return result;
         }
 
@@ -56,7 +56,7 @@ namespace Para.Api.Controllers
         public async Task<ApiResponse> Put(long addressId, [FromBody] CustomerAddressRequest value)
         {
             var operation = new UpdateCustomerAddressCommand(addressId, value);
-            var result = await _mediator.Send(operation);
+            var result = await mediator.Send(operation);
             return result;
         }
 
@@ -64,7 +64,7 @@ namespace Para.Api.Controllers
         public async Task<ApiResponse> Delete(long addressId)
         {
             var operation = new DeleteCustomerAddressCommand(addressId);
-            var result = await _mediator.Send(operation);
+            var result = await mediator.Send(operation);
             return result;
         }
     }
