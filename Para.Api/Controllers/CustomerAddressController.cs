@@ -28,21 +28,6 @@ namespace Para.Api.Controllers
             return result;
         }
 
-        [HttpGet("{addressId}")]
-        public async Task<ApiResponse<CustomerAddressResponse>> Get([FromRoute] long addressId)
-        {
-            var operation = new GetCustomerAddressByIdQuery(addressId);
-            var result = await mediator.Send(operation);
-            return result;
-        }
-
-        [HttpGet("search")]
-        public async Task<ApiResponse<List<CustomerAddressResponse>>> GetByParameters([FromQuery] long customerId, [FromQuery] string country, [FromQuery] string city)
-        {
-            var operation = new GetCustomerAddressByParametersQuery(customerId, country, city);
-            var result = await mediator.Send(operation);
-            return result;
-        }
 
         [HttpPost]
         public async Task<ApiResponse<CustomerAddressResponse>> Post([FromBody] CustomerAddressRequest value)
@@ -52,8 +37,18 @@ namespace Para.Api.Controllers
             return result;
         }
 
+
+        [HttpGet("{addressId}")]
+        public async Task<ApiResponse<CustomerAddressResponse>> Get([FromRoute] long addressId)
+        {
+            var operation = new GetCustomerAddressByIdQuery(addressId);
+            var result = await mediator.Send(operation);
+            return result;
+        }
+
+
         [HttpPut("{addressId}")]
-        public async Task<ApiResponse> Put(long addressId, [FromBody] CustomerAddressRequest value)
+        public async Task<ApiResponse> Put([FromRoute] long addressId, [FromBody] CustomerAddressRequest value)
         {
             var operation = new UpdateCustomerAddressCommand(addressId, value);
             var result = await mediator.Send(operation);
@@ -61,7 +56,7 @@ namespace Para.Api.Controllers
         }
 
         [HttpDelete("{addressId}")]
-        public async Task<ApiResponse> Delete(long addressId)
+        public async Task<ApiResponse> Delete([FromRoute] long addressId)
         {
             var operation = new DeleteCustomerAddressCommand(addressId);
             var result = await mediator.Send(operation);

@@ -44,7 +44,7 @@ namespace Para.Api.Controllers
         }
 
         [HttpPut("{detailId}")]
-        public async Task<ApiResponse> Put(long detailId, [FromBody] CustomerDetailRequest value)
+        public async Task<ApiResponse> Put([FromRoute] long detailId, [FromBody] CustomerDetailRequest value)
         {
             var operation = new UpdateCustomerDetailCommand(detailId, value);
             var result = await mediator.Send(operation);
@@ -52,7 +52,7 @@ namespace Para.Api.Controllers
         }
 
         [HttpDelete("{detailId}")]
-        public async Task<ApiResponse> Delete(long detailId)
+        public async Task<ApiResponse> Delete([FromRoute] long detailId)
         {
             var operation = new DeleteCustomerDetailCommand(detailId);
             var result = await mediator.Send(operation);

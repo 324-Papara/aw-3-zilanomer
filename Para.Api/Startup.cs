@@ -1,6 +1,8 @@
 using System.Reflection;
 using System.Text.Json.Serialization;
 using AutoMapper;
+using FluentValidation.AspNetCore;
+using FluentValidation;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
@@ -8,8 +10,10 @@ using Para.Api.Middleware;
 using Para.Api.Service;
 using Para.Bussiness;
 using Para.Bussiness.Cqrs;
+using Para.Bussiness.Validators;
 using Para.Data.Context;
 using Para.Data.UnitOfWork;
+using Para.Bussiness.Command;
 
 namespace Para.Api;
 
@@ -40,7 +44,11 @@ public class Startup
         var connectionStringSql = Configuration.GetConnectionString("MsSqlConnection");
         services.AddDbContext<ParaDbContext>(options => options.UseSqlServer(connectionStringSql));
         //services.AddDbContext<ParaDbContext>(options => options.UseNpgsql(connectionStringPostgre));
-  
+
+        //FluentValidation
+        services.AddValidatorsFromAssemblyContaining<CustomerValidator>();
+        services.AddFluentValidation(x => x.RegisterValidatorsFromAssemblyContaining<CustomerValidator>());
+        // CustomerValidator sýnýfý bir referans olarak kullanýrýz, bu sekilde tum validatorleri otomatik olarak kaydetmis ve asp.net core a entegre etmis oluruz.
 
         services.AddScoped<IUnitOfWork, UnitOfWork>();
 
@@ -51,7 +59,8 @@ public class Startup
         services.AddSingleton(config.CreateMapper());
 
 
-        services.AddMediatR(typeof(CreateCustomerCommand).GetTypeInfo().Assembly);
+        services.AddMediatR(typeof(CustomerAddressCommandHandler).Assembly);
+
 
         services.AddTransient<CustomService1>();
         services.AddScoped<CustomService2>();
