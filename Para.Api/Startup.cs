@@ -14,6 +14,8 @@ using Para.Bussiness.Validators;
 using Para.Data.Context;
 using Para.Data.UnitOfWork;
 using Para.Bussiness.Command;
+using Autofac;
+using Para.Api.Dependencies;
 
 namespace Para.Api;
 
@@ -50,21 +52,13 @@ public class Startup
         services.AddFluentValidation(x => x.RegisterValidatorsFromAssemblyContaining<CustomerValidator>());
         // CustomerValidator sýnýfý bir referans olarak kullanýrýz, bu sekilde tum validatorleri otomatik olarak kaydetmis ve asp.net core a entegre etmis oluruz.
 
-        services.AddScoped<IUnitOfWork, UnitOfWork>();
-
-        var config = new MapperConfiguration(cfg =>
-        {
-            cfg.AddProfile(new MapperConfig());
-        });
-        services.AddSingleton(config.CreateMapper());
-
-
         services.AddMediatR(typeof(CustomerAddressCommandHandler).Assembly);
 
+    }
 
-        services.AddTransient<CustomService1>();
-        services.AddScoped<CustomService2>();
-        services.AddSingleton<CustomService3>();
+    public void ConfigureContainer(ContainerBuilder builder)
+    {
+        builder.RegisterModule(new AutofacModule());
     }
 
     public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
